@@ -1,4 +1,5 @@
 from collections import deque
+from copy import deepcopy
 
 
 class Database:
@@ -25,15 +26,18 @@ class Database:
             self._reduce_counter(deleted_value)
 
     def get_keys(self, value: int) -> str:
-        return " ".join((key for key, db_value in self.db.items() if db_value == value))
+        return " ".join(key for key, db_value in self.db.items() if db_value == value)
 
     def get_counter(self, key: int) -> str:
         return self.counter_values.get(key, 0)
 
     def _reduce_counter(self, key: int) -> None:
-        self.counter_values[key] -= 1
+        self.counter_values[key] = self.counter_values.get(key, 2) - 1
         if self.counter_values[key] == 0:
             del self.counter_values[key]
+
+    def copy(self):
+        return deepcopy(self)
 
 
 class Transaction:
@@ -62,8 +66,7 @@ class Transaction:
     def commit(self, db: "Database") -> None:
         while self.methods:
             method, *args = self.methods.popleft()
-            getattr(db, method)
-            method(*args)
+            getattr(db, method)(*args)
 
     def rollback(self):
-        pass
+        return self.db_snapshot.copy()
