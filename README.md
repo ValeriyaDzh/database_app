@@ -7,7 +7,7 @@
 1. Клонируйте репозиторий
 
 ```bash
-git clone https://github.com/ValeriyaDzh/librarian.git
+git clone https://github.com/ValeriyaDzh/database_app.git
 ```
 
 2. Запустите приложение
