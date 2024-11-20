@@ -14,8 +14,10 @@ class Database:
     def set_value(self, key: str, value: int) -> None:
         old_value = self.db.get(key)
         if old_value:
-            self.db[key] = old_value + value
+            new_value = old_value + value
+            self.db[key] = new_value
             self._reduce_counter(old_value)
+            self.counter_values[new_value] = self.counter_values.get(new_value, 0) + 1
         else:
             self.counter_values[value] = self.counter_values.get(value, 0) + 1
             self.db[key] = value
